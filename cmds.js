@@ -131,13 +131,14 @@ exports.testCmd = (rl, id) => {
          let quiz = model.getByIndex(id);
 
          rl.question(colorize(`${quiz.question}${colorize('?', 'red')}`, 'red'), answer =>{
-             var p1 = answer.trim().toLowerCase();
-             var p2 = quiz.answer.toLowerCase();
-             inicio = -5;
+             //var p1 = answer.trim().toLowerCase();
+            // var p2 = quiz.answer.toLowerCase();
+           //  inicio = -5;
 
-             var subCadena1 = p1.substr(inicio);
-             var subCadena2 = p2.substr(inicio);
-             if(subCadena1 === subCadena2){
+             //var subCadena1 = p1.substr(inicio);
+            // var subCadena2 = p2.substr(inicio);
+            //if(subCadena1 === subCadena2){
+             if(quiz.answer.toLowerCase() === answer.trim().toLowerCase()){
                  log(`Su respuesta es:`);
                  biglog('correcta', 'green');
              }else {
@@ -162,14 +163,15 @@ exports.testCmd = (rl, id) => {
  */
 
 exports.playCmd = rl => {
+
     let score = 0;
-    let toBeResolved = []; //Array con todos los ids de las preguntas que existen en un array de tamaño model.count
-    for(i=1; i<model.count()-1; i++){
+    let toBeResolved = [];
+    var i;
+    for(i =0; i<model.count(); i++ ){
         toBeResolved[i] = i;
     };
 
 const playOne = () =>{
-
     if(toBeResolved.length == 0){
         log('No hay más preguntas.');
         log('Fin del examen. Aciertos:');
@@ -179,12 +181,13 @@ const playOne = () =>{
         let tamaño = toBeResolved.length -1;
         let id = toBeResolved[Math.trunc(Math.random()*tamaño)];
         let quiz = model.getByIndex(id);
-        for(i=1; i<toBeResolved.length-1; i++){
-            if(toBeResolved[i]==id){
+        var i;
+        for(i =0; i<toBeResolved.length; i++){
+            if(toBeResolved[i] == id){
                 toBeResolved.splice(i, 1);
             }
         }
-        rl.question(colorize(`${quiz.question}$`, 'red'),answer =>{
+        rl.question(colorize(`${quiz.question}?`, 'red'), answer =>{
             if(quiz.answer.toLowerCase() === answer.trim().toLowerCase()){
                 score = score+1;
                 log(`${colorize('La respuesta es', 'black')} ${colorize('correcta', 'green')}`);
@@ -194,14 +197,11 @@ const playOne = () =>{
                 log('Fin del examen. Aciertos:');
                 biglog(`Aciertos: ${score}`, 'blue');
                 rl.prompt();
-                //Salgo de este metodo
             };
         });
     }
-
 }
-    playOne();
-
+playOne();
 };
 
 /**
