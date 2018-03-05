@@ -167,11 +167,11 @@ exports.playCmd = rl => {
     let score = 0;
     let toBeResolved = [];
     var i;
-    for(i =0; i<model.count(); i++ ){
+    for(i = 0; i<model.count(); i++ ){
         toBeResolved[i] = i;
     };
 
-const playOne = () =>{
+    const playOne = () =>{
     if(toBeResolved.length == 0){
         log('No hay más preguntas.');
         log('Fin del examen. Aciertos:');
@@ -187,9 +187,9 @@ const playOne = () =>{
                 toBeResolved.splice(i, 1);
             }
         }
-        rl.question(colorize(`${quiz.question}?`, 'red'), answer =>{
+        rl.question(colorize(`${quiz.question}?`, 'red'), answer => {
             if(quiz.answer.toLowerCase() === answer.trim().toLowerCase()){
-                score = score+1;
+                score += 1;
                 log(`${colorize('La respuesta es', 'black')} ${colorize('correcta', 'green')}`);
                 playOne();
             }else{
