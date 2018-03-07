@@ -179,7 +179,7 @@ exports.playCmd = rl => {
         rl.prompt();
     }else{
         let tamaño = toBeResolved.length -1;
-        let id = toBeResolved[Math.trunc(Math.random()*tamaño)];
+        let id = toBeResolved[Math.floor(Math.random()*tamaño)];
         let quiz = model.getByIndex(id);
         var i;
         for(i =0; i<toBeResolved.length; i++){
