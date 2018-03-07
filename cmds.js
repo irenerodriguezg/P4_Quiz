@@ -138,7 +138,7 @@ exports.testCmd = (rl, id) => {
              //var subCadena1 = p1.substr(inicio);
             // var subCadena2 = p2.substr(inicio);
             //if(subCadena1 === subCadena2){
-             if(quiz.answer.toLowerCase() === answer.trim().toLowerCase()){
+             if(quiz.answer.toLowerCase() === answer.floor().toLowerCase()){
                  log(`Su respuesta es:`);
                  biglog('correcta', 'green');
              }else {
