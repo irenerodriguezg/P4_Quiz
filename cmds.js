@@ -217,44 +217,120 @@ exports.testCmd = (rl, id) => {
 exports.playCmd = rl => {
 
     let score = 0;
-    let toBeResolved = [];
-    var i;
-    for(i = 0; i<model.count(); i++ ){
-        toBeResolved[i] = i;
-    };
+    let toBePlayed = [];
+
+    models.quiz.findAll({raw:true})
+        .then(quizzes => {
+            toBePlayed = quizzes;
+        })
 
     const playOne = () =>{
-    if(toBeResolved.length == 0){
-        log('No hay más preguntas.');
-        log('Fin del examen. Aciertos:');
-        biglog(`${score}`);
-        rl.prompt();
-    }else{
-        let tamaño = toBeResolved.length -1;
-        let id = toBeResolved[Math.floor(Math.random()*tamaño)];
-        let quiz = model.getByIndex(id);
-        var i;
-        for(i =0; i<toBeResolved.length; i++){
-            if(toBeResolved[i] == id){
-                toBeResolved.splice(i, 1);
-            }
-        }
-        rl.question(colorize(`${quiz.question}?`, 'red'), answer => {
-            if(quiz.answer.toLowerCase() === answer.trim().toLowerCase()){
-                score += 1;
-                log(`${colorize('La respuesta es', 'black')} ${colorize('correcta', 'green')}`);
-                playOne();
-            }else{
-                log('Incorrecto');
-                log('Fin del examen. Aciertos:');
-                biglog(`Aciertos: ${score}`, 'blue');
-                rl.prompt();
-            };
-        });
+
+        return Promise.resolve()
+            .then(() => {
+                if (toBePlayed.length <= 0) {
+                    console.log("FINAL");
+                    return;
+                }
+
+                let pos = Math.floor(Math.random() * toBePlayed.length);
+                let quiz = toBePlayed[pos];
+                toBePlayed.splice(pos, 1);
+
+                return makeQuestion(rl, quiz.question)
+                    .then(answer => {
+                        if (answer.toLowerCase().trim() === quiz.answer.toLowerCase().trim()) {
+                            score++;
+                            console.log("Respuesta correcta");
+                            return playOne();
+                        } else {
+                            console.log("Respuesta incorrecta");
+                        }
+                    })
+
+            })
     }
-}
-playOne();
+    models.quiz.findAll({raw:true})
+        .then (quizzes => {
+            toBePlayed = quizzes;
+        })
+        .then(() => {
+            return playOne();
+
+        })
+        .catch (e =>{
+            console.log("Error: " + e);
+        })
+        .then(() => {
+            console.log(score);
+            rl.prompt();
+        })
 };
+
+
+/**exports.playCmd = rl => {
+
+    let score = 0;
+
+    let toBeResolved = [];
+
+    const playOne = () =>{
+        return new Promise((resolve, reject) => {
+
+            if (toBeResolved.length == 0) {
+                log("No hay más preguntas.");
+                log("Fin del examen. Aciertos:");
+                biglog(score, "magenta");
+                //rl.prompt();
+            }
+            let id_random = Math.floor(Math.random() * toBeResolved.length);
+            let quiz = toBeResolved[id_random];
+            toBeResolved.splice(id_random, 1);
+
+            return makeQuestion(rl, quiz.question)
+
+                .then(answer => {
+                    respuesta = answer.toLowerCase().trim();
+                    respuesta2 = quiz.answer.toLowerCase().trim();
+                    if (respuesta === respuesta2) {
+                        score++;
+                        biglog("Correcto", 'green');
+                        log(`CORRECTO - Lleva ${score} aciertos.`);
+                        playOne();
+
+                    } else {
+                        log("INCORRECTO.");
+                        biglog("Incorrecto", 'red');
+                        log("Fin del examen. Aciertos:");
+                        biglog(score, "magenta");
+                        rl.prompt();
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+
+        })
+    }
+    models.quiz.findAll({raw: true})
+        .then(quizzes =>{
+            toBeResolved=quizzes;
+        })
+        .then(()=>{
+            return playOne();
+        })
+        .catch(error => {
+            console.log(error);
+        })
+        .then(()=>{
+            console.log(score);
+            rl.prompt();
+        })
+
+};
+*/
+
+
 
 /**
  * Muestra los nombres de los autores de la practica.
