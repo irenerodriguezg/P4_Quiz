@@ -245,6 +245,7 @@ exports.playCmd = rl => {
                             return playOne();
                         } else {
                             console.log("Respuesta incorrecta");
+                            console.log("Fin del examen. Aciertos:");
                         }
                     })
 
