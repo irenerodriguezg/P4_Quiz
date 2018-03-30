@@ -39,7 +39,7 @@ exports.listCmd = (socket, rl) => {
         });
 };
 
-const validateId = (socket, id) => {
+const validateId = id => {
     return new Promise((resolve, reject) => {
         if(typeof id === "undefined") {
             reject(new Error(`Falta el parametro <id>.`));
